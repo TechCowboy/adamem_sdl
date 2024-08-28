@@ -27,5 +27,5 @@ The Windows target is built using the Visual Studio solution.
 Mac OS support via Xcode project (still cleaning these up, stay tuned).
 
 # FujiNet
-0
+
 The FujiNet extension was created by Norman Davie (TechCowboy) with minimal disruption of the coleco.c code and the addition of fujinet.c/h
