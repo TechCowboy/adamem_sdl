@@ -16,6 +16,10 @@
 #include <string.h>
 #include <time.h>
 
+#if defined(FUJINET)
+    #include "fujinet.h"
+#endif
+
 #if defined(WIN32) || defined(MSDOS)
   #if defined(IDEHD)
     #include "IDE/HarddiskIDE.h"
@@ -29,6 +33,8 @@
 #ifdef ZLIB
 #include <zlib.h>
 #endif
+
+
 
 /* #define PRINT_IO  */           /* Print accesses to unused I/O ports     */
 /* #define PRINT_MEM */           /* Print writes to ROM                    */
@@ -2874,10 +2880,15 @@ static void UpdateDCB (int mode,unsigned DCB)
   case 7:
    UpdateDisk (mode,dev_id-4,DCB);
    break;
+#ifdef FUJINET
+  case FUJINET_DEV:
+    UpdateFujinetDevice(mode, dev_id, DCB);
+    break;
+#endif
   case 8:
   case 9:
-  case 24:
-  case 25:
+  case 24: // 0x18
+  case 25: // 0x19
    UpdateTape (mode,dev_id/16+((dev_id&1)*2),DCB);
    break;
   default:
