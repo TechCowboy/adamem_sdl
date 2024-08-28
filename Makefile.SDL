@@ -12,11 +12,13 @@ CC	= $(CROSS_COMPILE)gcc	# C compiler used
 LD	= $(CROSS_COMPILE)gcc	# Linker used
 AS      = $(CROSS_COMPILE)gcc   # Assembler used
 
-CFLAGS	= -Wall -Wformat=0 -O2 -fomit-frame-pointer -IIDE \
+CFLAGS	= -Wall -Wformat=0 -O2 -fomit-frame-pointer -IIDE -Ifujinet \
           -DLSB_FIRST -DSDL -DDEBUG -DSOUND -DSOUND_PSG -DIDEHD -DFUJINET -I/usr/include/SDL2
 ASFLAGS = -Wall -c
 
-OBJECTS = ADAMEm.o Coleco.o Z80.o AdamemSDL.o AdamSDLSound_2.o Sound.o Z80Debug.o Bitmap.o HarddiskIDE.o sms_ntsc.o fujinet.o
+OBJECTS = ADAMEm.o Coleco.o Z80.o AdamemSDL.o AdamSDLSound_2.o Sound.o Z80Debug.o \
+          Bitmap.o HarddiskIDE.o sms_ntsc.o \
+		  fujinet.o fujinet_appkey.o fujinet_clock.o fujinet_network.o fujinet_network_json.o fujinet_random.o
 
 all:    adamem cvem keys z80dasm snapedit
 
@@ -48,13 +50,30 @@ snapedit: snapedit.o
 
 ADAMEm.o:   ADAMEm.c Coleco.h Z80.h Help.h Z80IO.h
 Coleco.o:   Coleco.c Coleco.h Z80.h Z80IO.h
-fujinet.o:  fujinet.c fujinet.h Z80.h Z80IO.h
+fujinet.o:  fujinet/fujinet.c
+	    $(CC) $(CFLAGS) -c fujinet/fujinet.c
+	
+fujinet_appkey.o: fujinet/fujinet_appkey.c
+	    $(CC) $(CFLAGS) -c fujinet/fujinet_appkey.c
+
+fujinet_network.o: fujinet/fujinet_network.c
+	    $(CC) $(CFLAGS) -c fujinet/fujinet_network.c
+
+fujinet_network_json.o: fujinet/fujinet_network_json.c
+	    $(CC) $(CFLAGS) -c fujinet/fujinet_network_json.c
+
+fujinet_clock.o: fujinet/fujinet_clock.c
+	    $(CC) $(CFLAGS) -c fujinet/fujinet_clock.c
+
+fujinet_random.o: fujinet/fujinet_random.c
+	    $(CC) $(CFLAGS) -c fujinet/fujinet_random.c
+
 Bitmap.o:   Bitmap.c Bitmap.h
 Z80Debug.o: Z80Debug.c Z80.h Z80IO.h z80dasm.h
 Z80.o:      Z80.c Z80.h Z80CDx86.h Z80IO.h Z80DAA.h
 SDL.o:      AdamemSDL.c AdamSDLSound_2.c
 Sound.o:    Sound.c Coleco.h Sound.h
-HarddiskIDE.o:
+HarddiskIDE.o: IDE/HarddiskIDE.c
 	    $(CC) $(CFLAGS) -c IDE/HarddiskIDE.c
 
 sms_ntsc.o:    sms_ntsc.c

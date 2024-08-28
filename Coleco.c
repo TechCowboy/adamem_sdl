@@ -17,7 +17,7 @@
 #include <time.h>
 
 #if defined(FUJINET)
-    #include "fujinet.h"
+    #include "fujinet/fujinet.h"
 #endif
 
 #if defined(WIN32) || defined(MSDOS)
@@ -2881,12 +2881,20 @@ static void UpdateDCB (int mode,unsigned DCB)
    UpdateDisk (mode,dev_id-4,DCB);
    break;
 #ifdef FUJINET
+  case FUJINET_DEV_N1:
+  case FUJINET_DEV_N2:
+  case FUJINET_DEV_N3:
+  case FUJINET_DEV_N4:
+    UpdateFujiNetwork(mode, dev_id, DCB);
+    break;
   case FUJINET_DEV:
-    UpdateFujinetDevice(mode, dev_id, DCB);
+    UpdateFujiDevice(mode, dev_id, DCB);
     break;
 #endif
   case 8:
+#ifndef FUJINET
   case 9:
+#endif
   case 24: // 0x18
   case 25: // 0x19
    UpdateTape (mode,dev_id/16+((dev_id&1)*2),DCB);

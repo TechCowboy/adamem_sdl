@@ -10,7 +10,7 @@
 
 #include "Coleco.h"
 #if defined(FUJINET)
-#include "fujinet.h"
+#include "fujinet/fujinet.h"
 #else
 #define FUJINET_VERSION ""
 #endif
