@@ -53,20 +53,8 @@ void DisplayDCB(char *device, int mode, int device_id, unsigned dcb);
 unsigned int Z80AddrFromDCBBuffer(unsigned dcb);
 void UpdateFujiDevice(int mode, int device_id, unsigned dcb);
 
-// fujinet_appkey.c
-void UpdateFujiAppOpenKey(int mode, int device_id, unsigned dcb);
-void UpdateFujiAppReadKey(int mode, int device_id, unsigned dcb);
-void UpdateFujiAppWriteKey(int mode, int device_id, unsigned dcb);
-void UpdateFujiAppCloseKey(int mode, int device_id, unsigned dcb);
+bool fujinet_setup(void);
 
-// fujinet_clock.c
-void UpdateFujiClock(int mode, int device_id, unsigned dcb);
-
-// fujinet_network.c
-void UpdateFujiNetwork(int mode, int device_id, unsigned dcb);
-
-// fujinet_network_json.c
-void UpdateFujiNetwork_json(int mode, int device_id, unsigned dcb);
 
 /** DCB Commands *********************************************/
 #define DCB_CMD_STATUS 0x01
@@ -167,6 +155,7 @@ typedef struct
 
 /*
 CMD	Fujinet Description
+
 $D1	Device Enable Status
 $D2	Get Time
 $D3	Random Number

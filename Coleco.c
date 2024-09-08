@@ -1918,8 +1918,10 @@ int StartColeco(void)
  FILE *f,*f_snap;
  int *T,i,j;
  char *P;
-
- T=(int *)"\01\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+#ifdef FUJINET
+ fujinet_setup();
+#endif
+     T = (int *)"\01\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
 #ifdef LSB_FIRST
  if(*T!=1)
  {

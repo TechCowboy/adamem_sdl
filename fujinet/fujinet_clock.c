@@ -31,64 +31,6 @@
 #include <zlib.h>
 #endif
 
-/*
-************************FUJIDEV*****************************
-dcb address: $ff6c  device id: 0f mode: 1
-cmd/status: 80 -
-buf: 0000
-len: 0
-block: 0
-local unit: 0f
-dev: 00
-max_len: 0
-type: 0
-dev_status: 00
-
-*****************************************************
-*******FUJIDEV: mode 00 | device id 0f | status 80
-*******FUJIDEV: mode 00 | device id 0f | status 80
-*******FUJIDEV: mode 00 | device id 0f | status 80
-*******FUJIDEV: mode 00 | device id 0f | status 80
-FUJICLK: WRITE
-************************<<<<<<< FUJICLK >>>>>>*****************************
-dcb address: $ff6c  device id: 0f mode: 1
-cmd/status: 03 - WRITE
-buf: d23f
-d2
-len: 1
-block: 0
-local unit: 0f
-dev: 00
-max_len: 0
-type: 0
-dev_status: 00
-
-*****************************************************
-*******FUJIDEV: mode 00 | device id 0f | status 80
-*******FUJIDEV: mode 00 | device id 0f | status 80
-*******FUJIDEV: mode 00 | device id 0f | status 80
-*******FUJIDEV: mode 00 | device id 0f | status 80
-*******FUJIDEV: mode 00 | device id 0f | status 80
-FUJICLK: READ
-now: 2024-08-27 22:30:38
-************************<<<<<<< FUJICLK >>>>>>*****************************
-dcb address: $ff6c  device id: 0f mode: 1
-cmd/status: 04 - READ
-buf: ce3f
-14 18 07 1b 16 1e 26
-len: 7
-block: 0
-local unit: 0f
-dev: 00
-max_len: 0
-type: 0
-dev_status: 00
-
-*****************************************************
-*******FUJIDEV: mode 00 | device id 0f | status 80
-*******FUJIDEV: mode 00 | device id 0f | status 80
-*******FUJIDEV: mode 00 | device id 0f | status 80
-*/
 void UpdateFujiClock(int mode, int device_id, unsigned dcb)
 {
     unsigned int z80_addr;

@@ -16,6 +16,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <time.h>
+#include <stdbool.h>
 
 #if defined(WIN32) || defined(MSDOS)
 #if defined(IDEHD)
@@ -33,7 +34,7 @@
 
 void UpdateFujiRandom(int mode, int device_id, unsigned dcb)
 {
-    static first_time = 1;
+    static bool first_time = true;
     unsigned int z80_addr;
     short random;
     byte *p;
@@ -43,6 +44,7 @@ void UpdateFujiRandom(int mode, int device_id, unsigned dcb)
 
     if (first_time)
     {
+        first_time = false;
         srand(time(NULL));
     }
 

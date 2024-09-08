@@ -9,13 +9,24 @@
 /**     Please, notify me, if you make any changes to this file            **/
 /****************************************************************************/
 
-#include "../Coleco.h"
-#include "fujinet.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
+
+#include "../Coleco.h"
+#include "fujinet.h"
+#include "fujinet_slip.h"
+#include "fujinet_communications.h"
+#include "fujinet_appkey.h"
+#include "fujinet_clock.h"
+#include "fujinet_network.h"
+#include "fujinet_network_json.h"
+#include "fujinet_random.h"
+
+
 
 #if defined(WIN32) || defined(MSDOS)
 #if defined(IDEHD)
@@ -31,7 +42,84 @@
 #include <zlib.h>
 #endif
 
+
+
 bool fujinet_verbose = true;
+
+/*
+    Devices (15 max):
+        Device 00 = Master 6801 ADAMnet controller (uses the adam_pcb as DCB)
+        Device 01 = Keyboard
+        Device 02 = ADAM printer
+            PRINTER
+        Device 03 = Copywriter (projected)
+        Device 04 = Disk drive 1
+        Device 05 = Disk drive 2
+        Device 06 = Disk drive 3 (third party)
+        Device 07 = Disk drive 4 (third party)
+        Device 08 = Tape drive 1
+        Device 09 = FUJINET N1
+            FUJINET_DISK_1
+        Device 0A = FUJINET N2
+            FUJINET_DISK_2
+        Device 0B = FUJINET N3
+            FUJINET_DISK_3
+        Device 0C = FUJINET N4
+            FUJINET_DISK_4
+        Device 0D = ADAM parallel interface (never released)
+        Device 0E = ADAM serial interface (never released)
+        Device 0F = FUJINET DEVICE
+            THE_FUJI
+                FN_CLOCK
+        Device 18 = Tape drive 2 (share DCB with Tape1)
+        Device 19 = Tape drive 4 (projected, may have share DCB with Tape3)
+        Device 20 = Expansion RAM disk drive (third party ID, not used by Coleco)
+        Device 52 = Disk
+
+            CPM
+            MODEM
+            NETWORK
+
+        */
+
+bool fujinet_setup(void)
+{
+    int retries = 10;
+    printf("Calling start_communications_thread\n");
+    start_communications_thread();
+    void *msg_queue;
+    unsigned char *status;
+    int wait_result;
+
+    while(retries--)
+    {
+        if (communications_are_active())
+            break;
+        else
+            sleep(1);
+    }
+    if (retries <= 0)
+        printf("retries failed\n");
+
+    fujinet_reset(0, NULL);
+    for (int adam_device_id = 0; adam_device_id < 16; adam_device_id++)
+    {
+        if (fujinet_init(adam_device_id, &msg_queue) )
+        {
+            wait_result = wait_for_response(msg_queue);
+            if (wait_result == 1)
+            {
+                status = get_status_response(msg_queue);
+                if (*status != STATUS_OK)
+                    printf("status adam_device_id: %d -- status %02x\n", adam_device_id, *status);
+                set_message_processed(msg_queue);
+            }
+        }
+    }
+
+    return true;
+
+}
 
 
 unsigned int Z80AddrFromDCBBuffer(unsigned dcb)
