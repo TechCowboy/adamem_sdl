@@ -396,17 +396,17 @@ bool send_via_slip(unsigned char *raw_data, int in_size, void **queue)
     if (! add_to_message_queue(raw_data, in_size, queue))
         return false;
 
-    printf("->[%d]fujinet: ", in_size);
-    for (int i = 0; i < in_size; i++)
-        printf("%02x ", raw_data[i]);
-    printf("\n");
+    //printf("->[%d]fujinet: ", in_size);
+    //for (int i = 0; i < in_size; i++)
+    //    printf("%02x ", raw_data[i]);
+    //printf("\n");
 
     create_slip_message(raw_data, in_size, escaped_data, &out_size);
 
-   // printf("slip out: ");
-    //for (int i = 0; i < out_size; i++)
-    //    printf("%02x ", escaped_data[i]);
-    //printf("\n");
+    printf("slip out: ");
+    for (int i = 0; i < out_size; i++)
+        printf("%02x ", escaped_data[i]);
+    printf("\n");
 
     if (send(fujinet_socket, escaped_data, out_size, 0) < 0)
     {

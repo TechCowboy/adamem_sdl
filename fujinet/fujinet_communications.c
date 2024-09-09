@@ -15,6 +15,7 @@
 #include <signal.h>
 #include <pthread.h>
 
+#include "fujinet.h"
 #include "fujinet_communications.h"
 #include "fujinet_slip.h"
 
@@ -38,7 +39,8 @@ SMARTPORT_DEVICE SmartPortTranslationTable[] =
         {0x0F, "NETWORK", 0x07},
         {0x02, "PRINTER", 0x08},
         {0x0F, "MODEM", 0x09},
-        {0x00, "", 0x00}};
+        {0x00, "", 0x00}
+    };
 
 
 
@@ -142,6 +144,49 @@ bool fujinet_reset(int adam_device_id, void **response)
         return success;
     } else
         return false;
+}
+
+bool fujinet_clock(FUJI_TIME *ft)
+{
+    void *msg_queue;
+    bool success = false;
+    int data_size = 0;
+    int wait_result;
+    unsigned char *data;
+    unsigned char *status;
+    
+
+    if (communications_are_active())
+    {
+        raw_data[data_size++] = sequence_number(true);
+        raw_data[data_size++] = SLIP_CMD_STATUS_REQUEST;
+        raw_data[data_size++] = 6; // smartport
+        raw_data[data_size++] = 'T';
+
+        success = send_via_slip(raw_data, data_size, &msg_queue);
+        if (success)
+        {
+            wait_result = wait_for_response(msg_queue);
+            if (wait_result == 1)
+            {
+                status = get_status_response(msg_queue);
+                if (*status != STATUS_OK)
+                {
+                    printf("clock status: %02x\n", *status);
+                    return false;
+                }
+
+                data = get_data_response(msg_queue);
+                printf("Filling fujitime\n");
+                memcpy(ft, data, sizeof(FUJI_TIME));
+                success = true;
+
+                set_message_processed(msg_queue);
+            }
+        }
+    }
+
+    return success;
 }
 
 bool fujinet_init(int adam_device_id, void **response)

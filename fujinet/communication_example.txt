@@ -1570,8 +1570,12 @@ AppleWin ->  FujiNet  .  .  .  .  .  .
  FujiNet -> AppleWin  .  .  .  0  .  .  .  .  F  N  _  C  L  O  C  K                          .  .  .  .  .
 AppleWin ->  FujiNet c0 0c 00 06 54 c0
 AppleWin ->  FujiNet  .  .  .  .  T  .
+                           status
+                              
  FujiNet -> AppleWin c0 0c 00 14 18 09 05 0e 16 14 c0
  FujiNet -> AppleWin  .  .  .  .  .  .  .  .  .  .  .
+                              20 24  9  5 14 16 14
+
 AppleWin ->  FujiNet c0 0d 00 06 50 c0
 AppleWin ->  FujiNet  .  .  .  .  P  .
  FujiNet -> AppleWin c0 0d 00 25 31 16 0e c0

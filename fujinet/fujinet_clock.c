@@ -64,6 +64,7 @@ void UpdateFujiClock(int mode, int device_id, unsigned dcb)
             printf("FUJICLK: READ\n");
         z80_addr = Z80AddrFromDCBBuffer(dcb);
 
+        /*
         sprintf(year, "%04d", tm.tm_year + 1900);
         ft.year = atoi(&year[2]);
         year[2] = '\0';
@@ -85,6 +86,18 @@ void UpdateFujiClock(int mode, int device_id, unsigned dcb)
             RAM[z80_addr + i] = *p;
             p++;
         }
+        */
+
+        fujinet_clock(&ft);
+        Dcb->len = sizeof(ft);
+
+        p = (byte *)&ft;
+        for (int i = 0; i < Dcb->len; i++)
+        {
+            RAM[z80_addr + i] = *p;
+            p++;
+        }
+
         dcb_print = 1;
         break;
     default:
